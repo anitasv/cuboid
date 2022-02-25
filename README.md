@@ -5,9 +5,11 @@ Implements a solution to Problem 212, Project Euler.
 ## Usage
 
 For quick testing:
+
     $ lein run 10
 
 For full speed execution
+
     $ lein uberjar
     $ java -Dclojure.compiler.direct-linking=true -jar ./target/uberjar/cuboid-0.1.0-SNAPSHOT-standalone.jar 50000
 
