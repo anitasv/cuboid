@@ -1,6 +1,7 @@
 (ns cuboid.core-test
   (:require [clojure.test :refer [deftest testing is]]
-            [cuboid.solver :refer [cuboid-seq solve]]
+            [cuboid.random-cuboids :refer [cuboid-seq]]
+            [cuboid.solver :refer [solve]]
             [cuboid.lagged-fib :refer [fib-seq]]))
 
 (deftest c1-test

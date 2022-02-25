@@ -1,8 +1,6 @@
 (ns cuboid.solver
-  (:require [cuboid.lagged-fib :refer [fib-seq]]))
-
-; What dimension cuboids are we working with!
-(def ^:const dims 3)
+  (:require [cuboid.utils :refer [nil-combine]]
+            [cuboid.random-cuboids :refer [cuboid-seq]]))
 
 (defn seg-vol 
   "Length of a line segment, defined using [start, end]"
@@ -33,19 +31,6 @@
         s2
         [(s2 0) (s1 1)]))))
 
-(defn- nil-conj 
-  "private: Reducer used to implement nil-combine below!"
-  [v a]
-  (if (nil? a)
-    (reduced nil)
-    (conj v a)))
-
-(defn nil-combine 
-  "Takes a lazy collection, returns nil if any element is nil
-   otherwise return vector of the elements in the collection.
-   It short circuits when the first nil element is encountered"
-  [coll]
-  (reduce nil-conj [] coll))
 
 (defn cuboid-intersect 
   "Returns the cuboid that is result of intersection of two cuboids.
@@ -73,20 +58,6 @@
        (reduce conj space) ; add these intersections to space
        (#(conj % {:phase true :cuboid cuboid})))) ; add new cuboid
 
-(defn make-cuboid [coll]
-  (let [[pos delta] (partition dims coll)
-        pos-mod (map #(mod % 10000) pos)
-        del-mod (map #(+ 1 (mod % 399)) delta)]
-    (->> (map vector pos-mod del-mod)
-         (map (fn [[p d]] [p (+ p d)])))))
-
-(defn cuboid-seq
-  "Infinite lazy sequence of cuboids generated using lagged fibonacci
-   numbers"
-  []
-  (->> (fib-seq)
-       (partition (* 2 dims))
-       (map make-cuboid)))
 
 (defn solve 
   "Given number of cuboids return the total volume occupied by them"
