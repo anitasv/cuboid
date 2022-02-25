@@ -22,7 +22,6 @@
          723581599
          (solve 100)))))
 
-
 (deftest lagged-fib-100
   (testing "Checking if lagged fib implementation is right"
     (is (=

@@ -31,7 +31,6 @@
         s2
         [(s2 0) (s1 1)]))))
 
-
 (defn cuboid-intersect 
   "Returns the cuboid that is result of intersection of two cuboids.
    If no intersection returns nil"
@@ -57,7 +56,6 @@
        (filter some?) ; take only valid intersections
        (reduce conj space) ; add these intersections to space
        (#(conj % {:phase true :cuboid cuboid})))) ; add new cuboid
-
 
 (defn solve 
   "Given number of cuboids return the total volume occupied by them"
