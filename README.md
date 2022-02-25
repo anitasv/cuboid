@@ -1,36 +1,20 @@
 # cuboid
 
-FIXME: description
-
-## Installation
-
-Download from http://example.com/FIXME.
+Implements a solution to Problem 212, Project Euler.
 
 ## Usage
 
-FIXME: explanation
+For quick testing:
+    $ lein run 10
 
-    $ java -jar cuboid-0.1.0-standalone.jar [args]
+For full speed execution
+    $ lein uberjar
+    $ java -Dclojure.compiler.direct-linking=true -jar ./target/uberjar/cuboid-0.1.0-SNAPSHOT-standalone.jar 50000
 
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
 
 ## License
 
-Copyright © 2022 FIXME
+Copyright © 2022 Anita S V
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
