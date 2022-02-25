@@ -42,8 +42,7 @@
    of opposite sign. If no intersection returns nil"
   [{phase :phase cuboid-1 :cuboid} cuboid-2]
   (let [icuboid (cuboid-intersect cuboid-1 cuboid-2)]
-    (if (nil? icuboid)
-      nil
+    (when (some? icuboid)
       {:phase (not phase) :cuboid icuboid})))
 
 (defn add-cuboid 
