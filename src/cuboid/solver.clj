@@ -3,9 +3,9 @@
             [cuboid.random-cuboids :refer [cuboid-seq]]))
 
 (defn seg-vol 
-  "Length of a line segment, defined using [start, end]"
-  [s]
-  (- (s 1) (s 0)))
+  "Length of a line segment"
+  [[start, end]]
+  (- end start))
 
 (defn cuboid-vol
   "Volume of an axis parallel cuboid, defined as vector of segments for each axes"
@@ -14,12 +14,12 @@
        (map seg-vol) 
        (apply *))) ; product of length of all sides
 
-(defn phased-vol 
+(defn phased-vol
   "Volume of a cuboid that either lives in current world or nether-world!"
   [{phase :phase cuboid :cuboid}]
-  (let [cv (cuboid-vol cuboid)]
-      (if phase cv (- cv))))
-
+  (cond-> (cuboid-vol cuboid)
+    (not phase) (-)))
+  
 (defn seg-intersect 
   "Intersection of two line segments. If no intersection returns nil"
   [s1 s2]
@@ -35,7 +35,8 @@
   "Returns the cuboid that is result of intersection of two cuboids.
    If no intersection returns nil"
   [c1 c2]
-  (nil-combine (map seg-intersect c1 c2)))
+  (-> (map seg-intersect c1 c2)
+      (nil-combine))) ; drop if any intersection is nil
 
 (defn ph-intersect 
   "Intersecting a phased-cuboid with a real cuboid returns another phased-cuboid
