@@ -40,11 +40,11 @@
 (defn ph-intersect 
   "Intersecting a phased-cuboid with a real cuboid returns another phased-cuboid
    of opposite sign. If no intersection returns nil"
-  [phased cuboid]
-  (let [icuboid (cuboid-intersect (phased :cuboid) cuboid)]
+  [{phase :phase cuboid-1 :cuboid} cuboid-2]
+  (let [icuboid (cuboid-intersect cuboid-1 cuboid-2)]
     (if (nil? icuboid)
       nil
-      {:phase (not (phased :phase)) :cuboid icuboid})))
+      {:phase (not phase) :cuboid icuboid})))
 
 (defn add-cuboid 
   "Adds a new cuboid to a list of phased-cuboids (space). 
