@@ -16,21 +16,18 @@
 
 (defn phased-vol
   "Volume of a cuboid that either lives in current world or nether-world!"
-  [{phase :phase cuboid :cuboid}]
+  [{:keys [phase cuboid]}]
   (cond-> (cuboid-vol cuboid)
     (not phase) (-)))
   
 (defn seg-intersect 
   "Intersection of two line segments. If no intersection returns nil"
-  [s1 s2]
-  (if (> (s1 0) (s2 0))
-    (seg-intersect s2 s1)
-    (if (>= (s2 0) (s1 1))
-      nil
-      (if (<= (s2 1) (s1 1))
-        s2
-        [(s2 0) (s1 1)]))))
-
+  [[a-start a-end] [b-start b-end]]
+  (let [c-start (max a-start b-start)
+        c-end (min a-end b-end)]
+    (when (< c-start c-end)
+      [c-start c-end])))
+  
 (defn cuboid-intersect 
   "Returns the cuboid that is result of intersection of two cuboids.
    If no intersection returns nil"
@@ -53,7 +50,7 @@
   (->> space
        (map #(ph-intersect % cuboid)) ; intersect with all 
        (filter some?) ; take only valid intersections
-       (reduce conj space) ; add these intersections to space
+       (into space) ; add these intersections to space
        (#(conj % {:phase true :cuboid cuboid})))) ; add new cuboid
 
 (defn solve 
