@@ -38,13 +38,12 @@
   (-> (map seg-intersect c1 c2)
       (nil-combine))) ; drop if any intersection is nil
 
-(defn ph-intersect 
+(defn ph-intersect
   "Intersecting a phased-cuboid with a real cuboid returns another phased-cuboid
    of opposite sign. If no intersection returns nil"
   [{phase :phase cuboid-1 :cuboid} cuboid-2]
-  (let [icuboid (cuboid-intersect cuboid-1 cuboid-2)]
-    (when (some? icuboid)
-      {:phase (not phase) :cuboid icuboid})))
+  (some-> (cuboid-intersect cuboid-1 cuboid-2)
+          (#(do {:phase (not phase) :cuboid %}))))
 
 (defn add-cuboid 
   "Adds a new cuboid to a list of phased-cuboids (space). 
