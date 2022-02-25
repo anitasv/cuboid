@@ -1,7 +1,7 @@
 (ns cuboid.solver
   (:require [cuboid.lagged-fib :refer [fib-seq]]))
 
-; What dimension cubes are we working with!
+; What dimension cuboids are we working with!
 (def ^:const dims 3)
 
 (defn seg-vol 
@@ -9,17 +9,17 @@
   [s]
   (- (s 1) (s 0)))
 
-(defn cube-vol
+(defn cuboid-vol
   "Volume of an axis parallel cuboid, defined as vector of segments for each axes"
-   [cube]
-  (->> cube 
+   [cuboid]
+  (->> cuboid 
        (map seg-vol) 
        (apply *))) ; product of length of all sides
 
 (defn phased-vol 
   "Volume of a cuboid that either lives in current world or nether-world!"
-  [{phase :phase cube :cube}]
-  (let [cv (cube-vol cube)]
+  [{phase :phase cuboid :cuboid}]
+  (let [cv (cuboid-vol cuboid)]
       (if phase cv (- cv))))
 
 (defn seg-intersect 
@@ -47,57 +47,52 @@
   [coll]
   (reduce nil-conj [] coll))
 
-(defn cube-intersect 
+(defn cuboid-intersect 
   "Returns the cuboid that is result of intersection of two cuboids.
    If no intersection returns nil"
   [c1 c2]
   (nil-combine (map seg-intersect c1 c2)))
 
 (defn ph-intersect 
-  "Intersecting a phased-cube with a real cube returns another phased-cube
+  "Intersecting a phased-cuboid with a real cuboid returns another phased-cuboid
    of opposite sign. If no intersection returns nil"
-  [phased cube]
-  (let [icube (cube-intersect (phased :cube) cube)]
-    (if (nil? icube)
+  [phased cuboid]
+  (let [icuboid (cuboid-intersect (phased :cuboid) cuboid)]
+    (if (nil? icuboid)
       nil
-      {:phase (not (phased :phase)) :cube icube})))
+      {:phase (not (phased :phase)) :cuboid icuboid})))
 
-(defn add-cube 
-  "Adds a new cube to a list of phased-cubes (space). 
-   When adding a new cube itself is added as a positive
-  phased cube, and all intersections are added with previous
-  phased cubes"
-  [space cube]
+(defn add-cuboid 
+  "Adds a new cuboid to a list of phased-cuboids (space). 
+   Adds itself as a positive phased cuboid, and adds it's own
+   intersection to all existing phased-cuboids"
+  [space cuboid]
   (->> space
-       (map #(ph-intersect % cube)) ; intersect with all 
+       (map #(ph-intersect % cuboid)) ; intersect with all 
        (filter some?) ; take only valid intersections
        (reduce conj space) ; add these intersections to space
-       (#(conj % {:phase true :cube cube})))) ; add new cube
+       (#(conj % {:phase true :cuboid cuboid})))) ; add new cuboid
 
-(defn make-cube [coll]
+(defn make-cuboid [coll]
   (let [[pos delta] (partition dims coll)
         pos-mod (map #(mod % 10000) pos)
         del-mod (map #(+ 1 (mod % 399)) delta)]
     (->> (map vector pos-mod del-mod)
          (map (fn [[p d]] [p (+ p d)])))))
 
-(defn cube-seq 
-  "Infinite lazy sequence of all cubes generated using lagged fibonacci
+(defn cuboid-seq
+  "Infinite lazy sequence of cuboids generated using lagged fibonacci
    numbers"
-  
-  ([]
-   (cube-seq (fib-seq)))
-  
-  ([lfib]
-   (->> lfib
+  []
+  (->> (fib-seq)
        (partition (* 2 dims))
-       (map make-cube))))
+       (map make-cuboid)))
 
 (defn solve 
-  "Given number of cubes return the total volume occupied by them"
-  [num-cubes]
-  (->> (cube-seq)
-       (take num-cubes)
-       (reduce add-cube [])
+  "Given number of cuboids return the total volume occupied by them"
+  [num-cuboids]
+  (->> (cuboid-seq)
+       (take num-cuboids)
+       (reduce add-cuboid [])
        (map phased-vol)
        (reduce +)))
