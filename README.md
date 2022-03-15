@@ -2,7 +2,7 @@
 
 Implements a solution to Problem 212, Project Euler. It is a very old problem,
 so I hope I am not violating any rules. This is not a very performant 
-implementation, identical java implementation was 17 times faster (java: 51 seconds 
+implementation, identical java implementation was 17 times faster (zig: 4 seconds, java: 51 seconds 
 vs clojure: 883 seconds). 
 
 I did mostly to learn clojure than solving the problem itself. 
