@@ -9,10 +9,9 @@ pub fn main() anyerror!void {
     const num_cuboids = 50000; // How many cuboids to generate.
     var fi = fib.FibIter.init();  // Used Lagged Fibonacci as random input
     var ci = gc.cuboidSeq(fi, dims); // Generate cuboids
-    const answer = solver.solve(dims, &ci, num_cuboids);
-    std.debug.print("Solution for {} cuboids: {}", .{num_cuboids, answer});
-}
-
-test "basic test" {
-    try std.testing.expectEqual(10, 3 + 7);
+    if (solver.solve(dims, &ci, num_cuboids)) |answer| {
+        std.debug.print("Solution for {} cuboids: {}", .{num_cuboids, answer});
+    } else |err| {
+        std.debug.print("Error: {}", .{err});
+    }
 }
