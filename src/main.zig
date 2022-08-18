@@ -10,7 +10,7 @@ pub fn main() anyerror!void {
     var fi = fib.FibIter.init();  // Used Lagged Fibonacci as random input
     var ci = gc.cuboidSeq(fi, dims); // Generate cuboids
     if (solver.solve(dims, &ci, num_cuboids)) |answer| {
-        std.debug.print("Solution for {} cuboids: {}", .{num_cuboids, answer});
+        std.debug.print("Solution for {} cuboids: {}\n", .{num_cuboids, answer});
     } else |err| {
         std.debug.print("Error: {}", .{err});
     }
